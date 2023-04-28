@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    service: hangman
+  name: hangman
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      service: hangman
+  template:
+    metadata:
+      labels:
+        service: hangman
+    spec:
+      containers:
+        - image: registry.digitalocean.com/first-registry-shantala/hangman:latest
+          name: hangman
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 3000
+      restartPolicy: Always
+

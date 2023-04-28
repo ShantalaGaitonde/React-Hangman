@@ -1,0 +1,19 @@
+name: Build hangman
+on: [workflow_dispatch]
+permissions:
+  contents: read
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install doctl
+        uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+      - name: Log in to DO Container Registry
+        run: doctl registry login --expiry-seconds 1200
+      - name: Build Hangman image
+        run: docker build --platform linux/amd64 -t registry.digitalocean.com/${{ secrets.DIGITALOCEAN_DOCKER_REPO_NAME }}/hangman:latest .
+      - name: Push hangman image to DO Container Registry
+        run: docker push registry.digitalocean.com/${{ secrets.DIGITALOCEAN_DOCKER_REPO_NAME }}/hangman:latest
